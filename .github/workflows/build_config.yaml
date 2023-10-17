@@ -24,15 +24,15 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential libncurses5-dev zlib1g-dev gawk git
+        sudo apt-get install -y bc lm-sensors pciutils luci-app-samba4 wsdd2 libpam ddns-scripts wget-ssl libkmod luci-proto-ipv6 liblzma libnetsnmp maccalc libcurl libtins libyaml-cpp glib2 libgpiod libtirpc pciids libaio
+      shell: bash
 
     - name: Configure OpenWrt
       run: |
-        # Clone Lean's OpenWrt repository
+        export TERM=dumb  # Set a dummy terminal
         git clone https://github.com/coolsnowwolf/lede.git
         cd lede
-
-        # Set up your environment variables or customize your .config file
-        make menuconfig  # You can use make defconfig if you have a predefined configuration.
+        make menuconfig
 
     - name: Save .config file
       run: |
