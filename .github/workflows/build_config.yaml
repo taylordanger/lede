@@ -5,11 +5,22 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: lede
 
     steps:
     - name: Check out the code
       uses: actions/checkout@v2
-
+      with: 
+        submodules: recursive
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+        
     - name: Set up dependencies
       run: |
         sudo apt-get update
