@@ -1,0 +1,43 @@
+name: Build OpenWrt Config
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v2
+
+    - name: Set up dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libncurses5-dev zlib1g-dev gawk git
+
+    - name: Configure OpenWrt
+      run: |
+        # Clone Lean's OpenWrt repository
+        git clone https://github.com/coolsnowwolf/lede.git
+        cd lede
+
+        # Set up your environment variables or customize your .config file
+        make menuconfig  # You can use make defconfig if you have a predefined configuration.
+
+    - name: Save .config file
+      run: |
+        # Save the generated ..config file to the repository
+        cp .config $GITHUB_WORKSPACE/.config
+
+    - name: Commit changes
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        git add .config
+        git commit -m "Auto-generated .config file"
+        git push
+
+    - name: Clean up
+      run: |
+        # Clean up after the build
+        make clean
